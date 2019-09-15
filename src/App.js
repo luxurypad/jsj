@@ -1,6 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom'
 
+import './assets/css/base.css'
+import 'antd/dist/antd.css'
+
 import Home from './pages/home/Home'
 import Login from './pages/login/Login'
 

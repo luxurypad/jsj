@@ -1,0 +1,6 @@
+@import "./normalize.css";
+
+#root{
+  height: 100%;
+  widows: 100%;
+}
