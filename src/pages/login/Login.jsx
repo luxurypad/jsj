@@ -1,11 +1,26 @@
 import React from 'react'
-import {DatePicker} from 'antd'
+import { Layout,Row,Col } from 'antd'
 
-export default ()=>{
+import LoginForm from '../../compontens/LoginForm'
+import NavBar from '../../compontens/NavBar'
+import './Login.css'
+
+const { Header, Footer, Content } = Layout
+
+export default (props) => {
   return (
-    <div>
-      login
-      <DatePicker />
-    </div>
+      <Layout className="login-layout">
+        <Header style={{backgroundColor:'rgb(255,255,255)'}}>
+          <NavBar {...props} ></NavBar>
+        </Header>
+        <Content className="login-content">
+          <Row type="flex" justify="center" align="middle" style={{height:'100%'}}>
+            <Col span={6} style={{}}>
+              <LoginForm {...props} ></LoginForm> 
+            </Col>
+          </Row>
+        </Content>
+        <Footer></Footer>
+      </Layout>
   )
 }
