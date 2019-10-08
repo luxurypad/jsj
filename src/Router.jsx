@@ -7,14 +7,15 @@ import Error from './pages/Error/Error'
 import Test from './pages/Test/Test'
 import News from './pages/news/News'
 import UploadJson from './compontens/UploadJson'
+import Users from './pages/users/Users'
 
 export default function Router() {
   return (
     <>
       <BrowserRouter>
         <Switch>
-          <Route path='/nav-tree' exact>
-            <UploadJson />
+          <Route path='/users' exact>
+            <Users/>
           </Route>
           <Route path='/news' exact>
             <News />
