@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useEffect } from 'react'
-import { headers } from '../custom-hooks/useFetch'
+import { headers } from '../hooks/useFetch'
 
 export const UserTokenContext = createContext()
 

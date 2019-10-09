@@ -1,15 +1,38 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
-import { Form, Icon, Input, Button, message, Spin} from 'antd';
+import { Form, Icon, Input, Button, message, Spin } from 'antd';
 import useFetch from '../hooks/useFetch'
 import { UserTokenContext } from '../store/UserToken'
 
-function LoginForm(props) {
+function SignIn(props) {
   const [userInfo, userInfoDispath] = useContext(UserTokenContext)
   const [request, setRequest] = useState({})
-  const { isLoading, response, error } = useFetch(request)
+  const { isLoading, response } = useFetch(request)
 
-  const { getFieldDecorator, validateFields, getFieldsValue } = props.form
+  const { getFieldDecorator, validateFields, resetFields } = props.form
+
+
+
+  //副作用处理网络请求响应
+  useEffect(() => {
+    if (!!response && response.result.length === 1) {
+      message.success('登陆成功')
+      userInfoDispath({ type: 'update', payload: { username: response.result[0].username, token: response.result[0].token } })
+    }else if(response){
+      message.error('用户名或密码错误')
+    }
+    // return () => {
+    //   props.setVisible(false)
+    // }
+  }, [!!response])
+
+  // if (userInfo.token) {
+  //   return (
+  //     <>
+  //       <Redirect to='/' />
+  //     </>
+  //   )
+  // }
 
   function handleSubmit(e) {
     //阻止默认提交
@@ -19,45 +42,19 @@ function LoginForm(props) {
       if (errors) {
         message.error('用户名和密码不符合规则')
       } else {
-        setRequest({ method: 'GET', uri: '/users', timestamp: Date.now(), requestData: [{ username: values.username, password: values.password }] })
+        setRequest({ method: 'GET', uri: '/users', unique: Symbol(), params: [{ username: values.username, password: btoa(values.password) }] })
       }
     })
   }
-
-  console.log(isLoading, response, error)
-
-  //副作用处理网络请求响应
-  useEffect(() => {
-    if (response) {
-      if (response.result.length === 1) {
-        message.success('登陆成功')
-        userInfoDispath({ type: 'update', payload: { username: response.result[0].username, token: response.result[0].token } })
-      } else {
-        message.error('用户名或密码错误')
-      }
-    }
-    return ()=>{
-      props.setVisible(false)
-    }
-  }, [isLoading])
-
-  if(userInfo.token){
-    return (
-      <>
-      <Redirect to='/'/>
-      </>
-    )
-  }
-
   return (
-    <div style={{ width: 'auto'}}>
+    <div>
       <Spin spinning={isLoading}>
-        <Form onSubmit={handleSubmit} className="login-form">
+        <Form onSubmit={handleSubmit}>
           <Form.Item>
             {getFieldDecorator('username', {
               rules: [
                 { required: true, message: '用户名不能为空' },
-                { pattern: /^[a-zA-Z](?=.{3,12})\w*$/, message: '[a-zA-Z]开头,[a-zA-Z0-9_]长度4-13' }
+                { pattern: /^[a-zA-Z](?=.{3,12})\w*$/, message: '[a-zA-Z]开头,[a-zA-Z0-9_]长度4-13' },
               ]
             })(<Input
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -68,7 +65,6 @@ function LoginForm(props) {
             {getFieldDecorator('password', {
               rules: [
                 { required: true, message: '密码不能为空' },
-                // { pattern: /^(?=.{6,16})(?=.*\d+.*)(?=.*[a-z]+.*)(?=.*[A-Z]+.*).*$/, message: '数字/大写字母/小写字母长度6-16位' }
               ]
             })(<Input
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -77,7 +73,12 @@ function LoginForm(props) {
             />)}
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" className="login-form-button" style={{ width: '100%' }}>登陆</Button>
+            <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+              登陆
+          </Button>
+            <Button type="primary" onClick={() => { resetFields() }} style={{ width: '100%' }}>
+              重置
+          </Button>
           </Form.Item>
         </Form>
       </Spin>
@@ -85,4 +86,4 @@ function LoginForm(props) {
   )
 }
 
-export default Form.create()(LoginForm)
+export default Form.create()(SignIn)

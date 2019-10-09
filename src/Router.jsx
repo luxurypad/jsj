@@ -4,16 +4,20 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 import Home from './pages/home/Home'
 import Login from './pages/login/Login'
 import Error from './pages/Error/Error'
-import Test from './pages/Test/Test'
+// import Test from './pages/Test/Test'
 import News from './pages/news/News'
-import UploadJson from './compontens/UploadJson'
+// import UploadJson from './compontens/UploadJson'
 import Users from './pages/users/Users'
+import SignUp from './compontens/SignUp'
 
 export default function Router() {
   return (
     <>
       <BrowserRouter>
         <Switch>
+          <Route path='/sign-up'>
+            <SignUp />
+          </Route>
           <Route path='/users' exact>
             <Users/>
           </Route>
@@ -26,9 +30,9 @@ export default function Router() {
           <Route path="/login" exact>
             <Login />
           </Route>
-          <Route path="/test" exact>
+          {/* <Route path="/test" exact>
             <Test />
-          </Route>
+          </Route> */}
           <Route path="/404" exact>
             <Error />
           </Route>

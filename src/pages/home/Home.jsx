@@ -4,6 +4,7 @@ import { Layout, Row, Col, Modal} from 'antd'
 import './Home.css'
 import NavBar from '../../compontens/NavBar'
 import { UserTokenContext} from '../../store/UserToken'
+import AvatarPopover from '../../compontens/AvatarPopover'
 
 const { Header, Footer, Content } = Layout
 
@@ -20,6 +21,7 @@ export default function Home(props) {
         <Row >
           <Col >
             <NavBar {...props}></NavBar>
+            <AvatarPopover />
           </Col>
         </Row>
 

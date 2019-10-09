@@ -3,5 +3,9 @@
 #root{
   height: 100%;
   width:100%;
-  background-image: url('../img/background.jpg')
 } 
+
+body{
+
+  background-image: url('../img/background.jpg')
+}
