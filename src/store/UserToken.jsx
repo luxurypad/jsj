@@ -4,7 +4,7 @@ import { headers } from '../hooks/useFetch'
 export const UserTokenContext = createContext()
 
 export default function UserToken(props) {
-  const [userInfo, userInfoDispath] = useReducer(reducer, { username: '', token: '' }, init)
+  const [userInfo, userInfoDispatch] = useReducer(reducer, { username: '', token: '' }, init)
 
   //渲染后的副作用，更新网络请求全局变量头信息
   useEffect(() => {
@@ -13,14 +13,23 @@ export default function UserToken(props) {
 
   return (
     <>
-      <UserTokenContext.Provider value={[userInfo, userInfoDispath]}>
+      <UserTokenContext.Provider value={[userInfo, userInfoDispatch]}>
         {props.children}
       </UserTokenContext.Provider>
     </>
   )
 }
-
-
+//定义reducer函数
+function reducer(state, action) {
+  switch (action.type) {
+    case 'update':
+      return update(action.payload)
+    case 'remove':
+      return remove()
+    default:
+      throw new Error()
+  }
+}
 //初始化函数
 function init() {
   return JSON.parse(localStorage.getItem('user_info') || '{"username":"","token":""}')
@@ -34,16 +43,4 @@ function update(payload) {
 function remove() {
   localStorage.removeItem('user_info') //同时删除本地存储
   return { username: '', token: '' }
-}
-
-//定义reducer函数
-function reducer(state, action) {
-  switch (action.type) {
-    case 'update':
-      return update(action.payload)
-    case 'remove':
-      return remove()
-    default:
-      throw new Error()
-  }
 }

@@ -30,9 +30,6 @@ export default function Router() {
           <Route path="/login" exact>
             <Login />
           </Route>
-          {/* <Route path="/test" exact>
-            <Test />
-          </Route> */}
           <Route path="/404" exact>
             <Error />
           </Route>

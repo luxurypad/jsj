@@ -1,7 +1,6 @@
 import React from 'react'
 import { Layout,Row,Col } from 'antd'
 
-import LoginForm from '../../compontens/LoginForm'
 import NavBar from '../../compontens/NavBar'
 import './Login.css'
 
@@ -16,7 +15,7 @@ export default (props) => {
         <Content className="login-content">
           <Row type="flex" justify="center" align="middle" style={{height:'100%'}}>
             <Col span={6} style={{}}>
-              <LoginForm {...props} ></LoginForm> 
+               
             </Col>
           </Row>
         </Content>

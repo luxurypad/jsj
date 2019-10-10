@@ -1,40 +1,32 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { Redirect } from 'react-router-dom'
-import { Form, Icon, Input, Button, message, Spin } from 'antd';
+import { Form, Icon, Input, Button, message, Spin} from 'antd';
 import useFetch from '../hooks/useFetch'
 import { UserTokenContext } from '../store/UserToken'
+import {GlobalModalContext} from '../store/GlobalModal'
 
 function SignIn(props) {
-  const [userInfo, userInfoDispath] = useContext(UserTokenContext)
+  const [userInfo, userInfoDispatch] = useContext(UserTokenContext)
+  const {contentDispatch}=useContext(GlobalModalContext)
+
   const [request, setRequest] = useState({})
   const { isLoading, response } = useFetch(request)
 
   const { getFieldDecorator, validateFields, resetFields } = props.form
 
-
-
   //副作用处理网络请求响应
   useEffect(() => {
     if (!!response && response.result.length === 1) {
       message.success('登陆成功')
-      userInfoDispath({ type: 'update', payload: { username: response.result[0].username, token: response.result[0].token } })
-    }else if(response){
+      //更新全局用户信息
+      userInfoDispatch({ type: 'update', payload: { username: response.result[0].username, token: response.result[0].token } })
+      //隐藏界面
+      contentDispatch({type:'hidden'}) 
+    }else if(response){   
       message.error('用户名或密码错误')
     }
-    // return () => {
-    //   props.setVisible(false)
-    // }
   }, [!!response])
 
-  // if (userInfo.token) {
-  //   return (
-  //     <>
-  //       <Redirect to='/' />
-  //     </>
-  //   )
-  // }
-
-  function handleSubmit(e) {
+   function handleSubmit(e) {
     //阻止默认提交
     e.preventDefault()
     //校验所有字段是否符合规则
@@ -85,5 +77,4 @@ function SignIn(props) {
     </div>
   )
 }
-
 export default Form.create()(SignIn)

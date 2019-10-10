@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Menu} from 'antd';
+import { Menu,Icon} from 'antd';
 import { useHistory } from 'react-router-dom'
 import useFetch from '../hooks/useFetch'
+import AvatarMenu from './AvatarMenu'
 
 export default function NavBar({mode='horizontal'}) {
   //给与request初始值，组件初始化时就进行网络请求,请求导航树数据
@@ -22,6 +23,7 @@ export default function NavBar({mode='horizontal'}) {
     <>
       <Menu mode={mode} onClick={(e) => { history.push(e.key) }} theme="light" style={{ lineHeight: '60px' }}>
         {f(response ? response.result : [])}
+      <AvatarMenu />
       </Menu>
     </>
   )

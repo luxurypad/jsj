@@ -1,10 +1,12 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useReducer, useContext } from 'react'
 import { Form, Input, Icon, Button, Spin, message } from 'antd';
 import useFetch from '../hooks/useFetch'
+import {GlobalModalContext} from '../store/GlobalModal'
 
+//网络请求状态dispatch
 function reducer(state, action) {
-  const { username, password, email } = action.payload
-  switch (action.type) {
+  const { type, payload: { username, password, email } } = action
+  switch (type) {
     case 'getUser':
       return { uri: '/users', method: 'GET', unique: Symbol(), params: [{ username }] }
     case 'addUser':
@@ -14,32 +16,38 @@ function reducer(state, action) {
   }
 }
 
-
 function SignUp(props) {
-  const { getFieldDecorator, getFieldValue, getFieldsValue, setFields, validateFields, resetFields } = props.form
+  const {contentDispatch}=useContext(GlobalModalContext)
+
   const [request, requestDispatch] = useReducer(reducer, {})
   const { isLoading, response } = useFetch(request)
+  //antd API
+  const { getFieldDecorator, getFieldValue, getFieldsValue, setFields, validateFields, resetFields } = props.form
 
-
+  //网络请求副作用及后续处理
   useEffect(() => {
     if (!!response && Array.isArray(response.result)) {
       if (response.result.length > 0) {
         message.error('账号重复，请重新输入')
+        //手动设置username字段错误
         setFields({
           username: {
             value: getFieldValue('username'),
             errors: [new Error('账号已被占用')]
           }
         })
-
       } else {
         const { username, password, email } = getFieldsValue()
+        //验证全部通过后插入用户记录
         requestDispatch({ type: 'addUser', payload: { username, password: btoa(password), email } })
       }
-
     } else if (!!response && response.result.n === 1) {
       message.success('注册成功')
       resetFields()
+      //隐藏界面
+      contentDispatch({type:'hidden'})
+      //跳转登陆
+      // props.contentDispatch({ type: 'signIn', payload: { setVisible: props.setVisible, setTitle: props.setTitle } })
     }
   }, [!!response])
 
@@ -48,9 +56,8 @@ function SignUp(props) {
     e.preventDefault()
     validateFields((err, values) => {
       if (!err) {
-        const { username } = values
         //开始进行网络请求，发出查询请求，后续插入用户操作自动完成
-        requestDispatch({ type: 'getUser', payload: { username } })
+        requestDispatch({ type: 'getUser', payload: { username:values.username } })
       }
     })
   }
@@ -72,7 +79,6 @@ function SignUp(props) {
   }
 
   return (
-
     // <div style={{ width: '350px', backgroundColor: 'rgba(255,255,255,1)', margin: '100px', padding: '10px' }}>
     <div>
       <Spin spinning={isLoading}>
@@ -136,5 +142,4 @@ function SignUp(props) {
     </div >
   )
 }
-
 export default Form.create()(SignUp)
