@@ -22,7 +22,7 @@ export default function NavBar({mode='horizontal'}) {
   return (
     <>
       <Menu mode={mode} onClick={(e) => { history.push(e.key) }} theme="light" style={{ lineHeight: '60px' }}>
-        {f(response ? response.result : [])}
+        {f(response ? response.data: [])}
       <AvatarMenu />
       </Menu>
     </>

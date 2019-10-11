@@ -19,6 +19,7 @@ import { message } from 'antd'
 
 //Fetch全局变量
 export const hostname = 'http://127.0.0.1:4000'
+// export const hostname = 'http://luxu.site:4000'
 export const headers = {
   'content-type': 'application/json',
   'Authorization': ''

@@ -15,10 +15,10 @@ function SignIn(props) {
 
   //副作用处理网络请求响应
   useEffect(() => {
-    if (!!response && response.result.length === 1) {
+    if (!!response && response.result.n === 1) {
       message.success('登陆成功')
-      //更新全局用户信息
-      userInfoDispatch({ type: 'update', payload: { username: response.result[0].username, token: response.result[0].token } })
+      //更新全局store用户信息
+      userInfoDispatch({ type: 'update', payload: { username: response.data[0].username, token: response.data[0].token } })
       //隐藏界面
       contentDispatch({type:'hidden'}) 
     }else if(response){   
