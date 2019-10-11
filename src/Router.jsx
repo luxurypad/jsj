@@ -9,12 +9,16 @@ import News from './pages/news/News'
 // import UploadJson from './compontens/UploadJson'
 import Users from './pages/users/Users'
 import SignUp from './compontens/SignUp'
+import ChangePassword from './compontens/ChangePassword'
 
 export default function Router() {
   return (
     <>
       <BrowserRouter>
         <Switch>
+          <Route path='/change'>
+            <ChangePassword />
+          </Route>
           <Route path='/sign-up'>
             <SignUp />
           </Route>
