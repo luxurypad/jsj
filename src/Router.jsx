@@ -10,6 +10,7 @@ import News from './pages/news/News'
 import Users from './pages/users/Users'
 import SignUp from './compontens/SignUp'
 import ChangePassword from './compontens/ChangePassword'
+import SignIn from './compontens/SignIn'
 
 export default function Router() {
   return (
@@ -32,7 +33,7 @@ export default function Router() {
             <Home />
           </Route>
           <Route path="/login" exact>
-            <Login />
+            <SignIn />
           </Route>
           <Route path="/404" exact>
             <Error />

@@ -9,9 +9,9 @@ export const GlobalModalContext = createContext()
 function reducer(state, action) {
   switch (action.type) {
     case 'signIn':
-      return { visible: true, title: '登陆窗口', content: <SignIn /> }
+      return { visible: true, title: '登陆', content: <SignIn /> }
     case 'signUp':
-      return { visible: true, title: '注册窗口', content: <SignUp /> }
+      return { visible: true, title: '注册', content: <SignUp /> }
     case 'hidden':
       return { visible: false, title: state.title, content: state.content }
     default:

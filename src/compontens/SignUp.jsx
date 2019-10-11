@@ -26,8 +26,8 @@ function SignUp(props) {
 
   //网络请求副作用及后续处理
   useEffect(() => {
-    if (!!response && Array.isArray(response.result)) {
-      if (response.result.length > 0) {
+    if (!!response && response.method==='GET') {
+      if (response.result.n > 0) {
         message.error('账号重复，请重新输入')
         //手动设置username字段错误
         setFields({
@@ -37,11 +37,12 @@ function SignUp(props) {
           }
         })
       } else {
+        //解构获取表单字段值
         const { username, password, email } = getFieldsValue()
         //验证全部通过后插入用户记录
         requestDispatch({ type: 'addUser', payload: { username, password: btoa(password), email } })
       }
-    } else if (!!response && response.result.n === 1) {
+    } else if (!!response && request.method==='POST' && response.result.n === 1) {
       message.success('注册成功')
       resetFields()
       //隐藏界面
@@ -56,7 +57,7 @@ function SignUp(props) {
     e.preventDefault()
     validateFields((err, values) => {
       if (!err) {
-        //开始进行网络请求，发出查询请求，后续插入用户操作自动完成
+        //开始网络请求流程，发出查询请求，后续插入用户操作自动完成
         requestDispatch({ type: 'getUser', payload: { username:values.username } })
       }
     })
