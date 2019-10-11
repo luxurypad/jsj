@@ -1,6 +1,7 @@
 import React, { useContext, useReducer, useEffect } from 'react'
-import { Form, Input, Button, Icon, message } from 'antd'
+import { Form, Input, Button, Icon, message, Spin } from 'antd'
 import { UserTokenContext } from '../store/UserToken'
+import { GlobalModalContext } from '../store/GlobalModal'
 import useFetch from '../hooks/useFetch'
 
 
@@ -17,7 +18,8 @@ function reducer(state, action) {
 }
 
 function ChangePassword(props) {
-  const [userinfo] = useContext(UserTokenContext)
+  const [userInfo, userInfoDispatch] = useContext(UserTokenContext)
+  const { contentDispatch } = useContext(GlobalModalContext)
   const [request, requestDispatch] = useReducer(reducer, {})
   const { isLoading, response } = useFetch(request)
 
@@ -40,8 +42,9 @@ function ChangePassword(props) {
     } else if (!!response && response.method === 'PATCH' && response.result.n === 1) {
       message.success('密码修改成功')
       resetFields()
+      userInfoDispatch({ type: 'remove' })
+      contentDispatch({ type: 'hidden' })
     }
-
   }, [!!response])
 
   function handleClick(e) {
@@ -74,43 +77,45 @@ function ChangePassword(props) {
 
   return (
     <>
-      <div style={{ width: '400px' }}>
-        <Form onSubmit={(e) => { handleClick(e) }} >
-          <Form.Item>
-            {getFieldDecorator('username', { initialValue: userinfo.username })(
-              <Input prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='用户名' disabled />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('oldPassword')(
-              <Input.Password prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='原密码' />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('newPassword', {
-              rules: [
-                { required: true, message: '请输入密码' },
-                { pattern: /^(?=.{6,16})(?=.*\d+.*)(?=.*[a-z]+.*).*$/, message: '至少包含数字和字母，长度6-16位' },
-                { validator: validateToNextPassword }
-              ]
-            })(
-              <Input.Password prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='新密码' />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('newPassword2', {
-              rules: [
-                { required: true, message: '请输入密码' },
-                { validator: compareToFirstPassword }
-              ]
-            })(
-              <Input.Password prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='再次输入密码' />
-            )}
-          </Form.Item>
-          <Form.Item>
-            <Button type='primary' htmlType='submit' style={{ width: '100%' }} >确认</Button>
-          </Form.Item>
-        </Form>
+      <div>
+        <Spin spinning={isLoading}>
+          <Form onSubmit={(e) => { handleClick(e) }} >
+            <Form.Item>
+              {getFieldDecorator('username', { initialValue: userInfo.username })(
+                <Input prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='用户名' disabled />
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('oldPassword', { rules: [{ required: true, message: '请输入密码' }] })(
+                <Input.Password prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='原密码' />
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('newPassword', {
+                rules: [
+                  { required: true, message: '请输入密码' },
+                  { pattern: /^(?=.{6,16})(?=.*\d+.*)(?=.*[a-z]+.*).*$/, message: '至少包含数字和字母，长度6-16位' },
+                  { validator: validateToNextPassword }
+                ]
+              })(
+                <Input.Password prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='新密码' />
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('newPassword2', {
+                rules: [
+                  { required: true, message: '请输入密码' },
+                  { validator: compareToFirstPassword }
+                ]
+              })(
+                <Input.Password prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='再次输入密码' />
+              )}
+            </Form.Item>
+            <Form.Item>
+              <Button type='primary' htmlType='submit' style={{ width: '100%' }} >确认</Button>
+            </Form.Item>
+          </Form>
+        </Spin>
       </div>
     </>
   )
