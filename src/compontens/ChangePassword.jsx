@@ -3,7 +3,7 @@ import { Form, Input, Button, Icon, message, Spin } from 'antd'
 import { UserTokenContext } from '../store/UserToken'
 import { GlobalModalContext } from '../store/GlobalModal'
 import useFetch from '../hooks/useFetch'
-
+import { useHistory } from 'react-router-dom'
 
 function reducer(state, action) {
   const { type, payload: { username, oldPassword, newPassword } } = action
@@ -22,9 +22,9 @@ function ChangePassword(props) {
   const { contentDispatch } = useContext(GlobalModalContext)
   const [request, requestDispatch] = useReducer(reducer, {})
   const { isLoading, response } = useFetch(request)
+  const history = useHistory()
 
   const { getFieldDecorator, getFieldValue, getFieldsValue, validateFields, setFields, resetFields } = props.form
-
 
   useEffect(() => {
     if (!!response && response.method === 'GET') {
@@ -44,6 +44,8 @@ function ChangePassword(props) {
       resetFields()
       userInfoDispatch({ type: 'remove' })
       contentDispatch({ type: 'hidden' })
+      history.push('/201')
+      // contentDispatch({type:'signUpSuccess'})
     }
   }, [!!response])
 

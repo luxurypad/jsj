@@ -3,6 +3,7 @@ import { Modal } from 'antd'
 
 import SignIn from '../compontens/SignIn'
 import SignUp from '../compontens/SignUp'
+// import SignUpSuccess from '../compontens/SignUpSuccess'
 import ChangePassword from '../compontens/ChangePassword'
 
 export const GlobalModalContext = createContext()
@@ -13,6 +14,8 @@ function reducer(state, action) {
       return { visible: true, title: '登陆', content: <SignIn /> }
     case 'signUp':
       return { visible: true, title: '注册', content: <SignUp /> }
+    // case 'signUpSuccess':
+      // return { visible: true, title: '注册成功', content: <SignUpSuccess/> }
     case 'changePassword':
       return { visible: true, title: '修改密码', content: <ChangePassword/> }
     case 'hidden':

@@ -2,6 +2,7 @@ import React, { useEffect, useReducer, useContext } from 'react'
 import { Form, Input, Icon, Button, Spin, message } from 'antd';
 import useFetch from '../hooks/useFetch'
 import {GlobalModalContext} from '../store/GlobalModal'
+import {useHistory} from 'react-router-dom'
 
 //网络请求状态dispatch
 function reducer(state, action) {
@@ -18,6 +19,7 @@ function reducer(state, action) {
 
 function SignUp(props) {
   const {contentDispatch}=useContext(GlobalModalContext)
+  const history=useHistory()
 
   const [request, requestDispatch] = useReducer(reducer, {})
   const { isLoading, response } = useFetch(request)
@@ -47,8 +49,11 @@ function SignUp(props) {
       resetFields()
       //隐藏界面
       contentDispatch({type:'hidden'})
+      
       //跳转登陆
-      // props.contentDispatch({ type: 'signIn', payload: { setVisible: props.setVisible, setTitle: props.setTitle } })
+      // contentDispatch({type:'signUpSuccess'})
+     history.push('/202') 
+
     }
   }, [!!response])
 
