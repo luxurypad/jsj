@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { message } from 'antd'
+import { API_CONFIG } from '../config/api'
 /*
 参数：object
 参数格式：{
@@ -17,25 +18,19 @@ import { message } from 'antd'
 }
 */
 
-//Fetch全局变量
-// export const hostname = 'http://127.0.0.1:4000'
-export const hostname = 'http://luxu.site:4000'
-export const headers = {
-  'content-type': 'application/json',
-  'Authorization': ''
-}
-
 //定义useFetch
 export default function useFetch({ uri, method, params, unique }) {
+  //配置文件获取最新全局变量值
+  const { host, headers } = API_CONFIG
   //设置网络请求响应状态
   const [responseState, setResponseState] = useState({ isLoading: false, response: null, error: null })
   //调和fetch参数
   const fetchRequestParameterArray = [
-    { method: 'GET', fetchParameter: [hostname + uri + '?g=' + JSON.stringify(params), { method, headers }] },
-    { method: 'DELETE', fetchParameter: [hostname + uri + '?d=' + JSON.stringify(params), { method, headers }] },
-    { method: 'POST', fetchParameter: [hostname + uri, { method, headers, body: JSON.stringify(params) }] },
-    { method: 'PATCH', fetchParameter: [hostname + uri, { method, headers, body: JSON.stringify(params) }] },
-    { method: 'PUT', fetchParameter: [hostname + uri, { method, headers, body: JSON.stringify(params) }] },
+    { method: 'GET', fetchParameter: [host + uri + '?g=' + JSON.stringify(params), { method, headers }] },
+    { method: 'DELETE', fetchParameter: [host + uri + '?d=' + JSON.stringify(params), { method, headers }] },
+    { method: 'POST', fetchParameter: [host + uri, { method, headers, body: JSON.stringify(params) }] },
+    { method: 'PATCH', fetchParameter: [host + uri, { method, headers, body: JSON.stringify(params) }] },
+    { method: 'PUT', fetchParameter: [host + uri, { method, headers, body: JSON.stringify(params) }] },
   ]
 
   //这里通过unique作为uesEffect的dependents,这样才能保证一个请求只请求一次，而不会在重新渲染时循环执行
@@ -52,7 +47,7 @@ export default function useFetch({ uri, method, params, unique }) {
     //状态为loading
     setResponseState({ isLoading: true, response: null, error: null })
 
-    console.log('Trigger network request',new Date())
+    console.log('Trigger network request', new Date())
 
     //请求数据
     fetch(...fetchRequestParameter.fetchParameter).then((response) => {
@@ -78,6 +73,6 @@ export default function useFetch({ uri, method, params, unique }) {
       //再次触发message提示时，清除上次还未结束的message
       message.destroy()
     }
-  }, [responseState.isLoading,!!responseState.error])
+  }, [responseState.isLoading, !!responseState.error])
   return responseState
 }  

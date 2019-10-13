@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useEffect } from 'react'
-import { headers } from '../hooks/useFetch'
+import { API_CONFIG } from '../config/api'
 
 export const UserTokenContext = createContext()
 
@@ -8,7 +8,7 @@ export default function UserToken(props) {
 
   //渲染后的副作用，更新网络请求全局变量头信息
   useEffect(() => {
-    headers.Authorization = userInfo.Authorization
+    API_CONFIG.headers.Authorization=userInfo.Authorization
   })
 
   return (
