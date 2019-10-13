@@ -8,3 +8,4 @@
   </GlobalModal>
   ```
 ## 2.完善feedbackresult组件，逻辑成功后的跳转
+## 3.更新api请求地址/api/uri

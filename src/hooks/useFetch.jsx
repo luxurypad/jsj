@@ -52,7 +52,8 @@ export default function useFetch({ uri, method, params, unique }) {
     //状态为loading
     setResponseState({ isLoading: true, response: null, error: null })
 
-    console.log('触发网络请求')
+    console.log('Trigger network request',new Date())
+
     //请求数据
     fetch(...fetchRequestParameter.fetchParameter).then((response) => {
       response.json().then((value) => {

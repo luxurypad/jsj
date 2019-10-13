@@ -34,7 +34,7 @@ function SignIn(props) {
       if (errors) {
         message.error('用户名和密码不符合规则')
       } else {
-        setRequest({ method: 'GET', uri: '/users', unique: Symbol(), params: [{ username: values.username, password: btoa(values.password) }] })
+        setRequest({ method: 'GET', uri: '/api/users', unique: Symbol(), params: [{ username: values.username, password: btoa(values.password) }] })
       }
     })
   }

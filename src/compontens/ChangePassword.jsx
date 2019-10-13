@@ -9,9 +9,9 @@ function reducer(state, action) {
   const { type, payload: { username, oldPassword, newPassword } } = action
   switch (type) {
     case 'validateUser':
-      return { uri: '/users', method: 'GET', unique: Symbol(), params: [{ username, password: btoa(oldPassword) }] }
+      return { uri: '/api/users', method: 'GET', unique: Symbol(), params: [{ username, password: btoa(oldPassword) }] }
     case 'updateUser':
-      return { uri: '/users', method: 'PATCH', unique: Symbol(), params: [{ username }, { $set: { password: btoa(newPassword) } }] }
+      return { uri: '/api/users', method: 'PATCH', unique: Symbol(), params: [{ username }, { $set: { password: btoa(newPassword) } }] }
     default:
       throw new Error()
   }

@@ -9,9 +9,9 @@ function reducer(state, action) {
   const { type, payload: { username, password, email } } = action
   switch (type) {
     case 'getUser':
-      return { uri: '/users', method: 'GET', unique: Symbol(), params: [{ username }] }
+      return { uri: '/api/users', method: 'GET', unique: Symbol(), params: [{ username }] }
     case 'addUser':
-      return { uri: '/users', method: 'POST', unique: Symbol(), params: [[{ username, password, email }]] }
+      return { uri: '/api/users', method: 'POST', unique: Symbol(), params: [[{ username, password, email }]] }
     default:
       throw new Error()
   }

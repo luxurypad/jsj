@@ -8,7 +8,7 @@ export default function (props){
   return (
     <div>
       <NavBar />
-      <div><button onClick={()=>{setRequest({uri:'/users',method:'GET',unique:Symbol(),params:[{}]})}}>查询所有用户信息</button> </div> 
+      <div><button onClick={()=>{setRequest({uri:'/api/users',method:'GET',unique:Symbol(),params:[{}]})}}>查询所有用户信息</button> </div> 
       <div>{JSON.stringify(response)}</div>
     </div>
   )
