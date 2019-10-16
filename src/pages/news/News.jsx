@@ -4,15 +4,11 @@ import NavBar from '../../compontens/NavBar'
 
 
 export default function (props){
-  let {id}=useParams()
-  let location=useLocation()
-  let match=useRouteMatch('/News/:id')
-  console.log(match)
-  console.log(location)
+  let params=useParams()
+   
   return (
     <div>
-      <NavBar />
-      <h2>这是新闻页面{id}</h2>
+      <h2>这是新闻页面{params.id}</h2>
     </div>
   )
 }

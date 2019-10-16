@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { message } from 'antd'
-import { API_CONFIG } from '../config/api'
 /*
 参数：object
 参数格式：{
-  uri:String
-  method:Array 值['GET','POST','DELETE','PATCH','PUT']
-  params:Array [{第1个参数},{第2个参数}...] //mongodb 查询方式
-  unique:Symbol //唯一标识 1.区分不同网络请求 2.避免副作用无限循环
+  uri:String,
+  method:String,  //'GET'||'POST'||'DELETE'||'PATCH'||'PUT'
+  unique:Symbol   //用于唯一标识 1.区分不同网络请求 2.避免副作用无限循环
+  params:Array,   //[第1个参数,第2个参数...] mongodb 查询方式
 }
---------------------------------------------------------------
+********************************************************************
 返回值：object
 返回值格式：{
   isLoading:Bool,
@@ -17,6 +14,9 @@ import { API_CONFIG } from '../config/api'
   error:Object
 }
 */
+import { useState, useEffect } from 'react'
+import { message } from 'antd'
+import { API_CONFIG } from '../config/api'
 
 //定义useFetch
 export default function useFetch({ uri, method, params, unique }) {
@@ -24,35 +24,28 @@ export default function useFetch({ uri, method, params, unique }) {
   const { host, headers } = API_CONFIG
   //设置网络请求响应状态
   const [responseState, setResponseState] = useState({ isLoading: false, response: null, error: null })
-  //调和fetch参数
-  const fetchRequestParameterArray = [
-    { method: 'GET', fetchParameter: [host + uri + '?g=' + JSON.stringify(params), { method, headers }] },
-    { method: 'DELETE', fetchParameter: [host + uri + '?d=' + JSON.stringify(params), { method, headers }] },
-    { method: 'POST', fetchParameter: [host + uri, { method, headers, body: JSON.stringify(params) }] },
-    { method: 'PATCH', fetchParameter: [host + uri, { method, headers, body: JSON.stringify(params) }] },
-    { method: 'PUT', fetchParameter: [host + uri, { method, headers, body: JSON.stringify(params) }] },
-  ]
 
   //这里通过unique作为uesEffect的dependents,这样才能保证一个请求只请求一次，而不会在重新渲染时循环执行
   useEffect(() => {
-
-    //若没有传入网络请求参数，则直接返回,不继续进行网络请求
-    if ([uri, method, params, unique].some((v, i, array) => typeof v === 'undefined')) {
+    //调和fetch请求参数
+    let fetchParams = []
+    if (['GET', 'DELETE'].some((v, i, arr) => v === method)) {
+      fetchParams = [host + uri + '?q=' + JSON.stringify(params), { method, headers }]
+    } else if (['POST', 'PATCH', 'PUT'].some((v, i, arr) => v === method)) {
+      fetchParams = [host + uri, { method, headers, body: JSON.stringify(params) }]
+    } else {
       return
     }
 
-    //获取调和后的参数
-    const fetchRequestParameter = fetchRequestParameterArray.find((v, i, obj) => v.method === method)
-
-    //状态为loading
+    //设置loading状态
     setResponseState({ isLoading: true, response: null, error: null })
 
-    console.log('Trigger network request', new Date())
+    console.log('Trigger network request', uri, method, new Date())
 
     //请求数据
-    fetch(...fetchRequestParameter.fetchParameter).then((response) => {
+    fetch(...fetchParams).then((response) => {
       response.json().then((value) => {
-        //异步更新状态
+        //异步获取响应状态
         setResponseState({ isLoading: false, response: value, error: null })
       }, (error) => {
         setResponseState({ isLoading: false, response: null, error: error })
@@ -60,19 +53,29 @@ export default function useFetch({ uri, method, params, unique }) {
     }, (error) => {
       setResponseState({ isLoading: false, response: null, error: error })
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unique])
 
   //定义全局加载、错误提示网络请求状态副作用
+
   useEffect(() => {
-    if (responseState.isLoading) {
-      message.loading('Request in progress...')
-    } else if (responseState.error) {
+    if (responseState.error) {
       message.error('Request failed')
     }
     return () => {
-      //再次触发message提示时，清除上次还未结束的message
       message.destroy()
     }
-  }, [responseState.isLoading, !!responseState.error])
+  }, [responseState.error]) 
+
+  useEffect(() => {
+    if (responseState.isLoading) {
+      message.loading('Request in progress...')
+    }
+    return () => {
+      message.destroy()
+    }
+  }, [responseState.isLoading]) 
+
   return responseState
-}  
+}   
+

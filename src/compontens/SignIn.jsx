@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { Form, Icon, Input, Button, message, Spin} from 'antd';
+import { Form, Icon, Input, Button, message, Spin } from 'antd';
 import useFetch from '../hooks/useFetch'
 import { UserTokenContext } from '../store/UserToken'
-import {GlobalModalContext} from '../store/GlobalModal'
+import { GlobalModalContext } from '../store/GlobalModal'
 
 function SignIn(props) {
   const [userInfo, userInfoDispatch] = useContext(UserTokenContext)
-  const {contentDispatch}=useContext(GlobalModalContext)
+  const { contentDispatch } = useContext(GlobalModalContext)
 
   const [request, setRequest] = useState({})
   const { isLoading, response } = useFetch(request)
@@ -20,13 +20,14 @@ function SignIn(props) {
       //更新全局store用户信息
       userInfoDispatch({ type: 'update', payload: { username: response.data[0].username, token: response.data[0].token } })
       //隐藏界面
-      contentDispatch({type:'hidden'}) 
-    }else if(response){   
+      contentDispatch({ type: 'hidden' })
+    } else if (response) {
       message.error('用户名或密码错误')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [!!response])
 
-   function handleSubmit(e) {
+  function handleSubmit(e) {
     //阻止默认提交
     e.preventDefault()
     //校验所有字段是否符合规则

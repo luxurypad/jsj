@@ -8,6 +8,9 @@ import Users from './pages/users/Users'
 import SignUp from './compontens/SignUp'
 import SignIn from './compontens/SignIn'
 import FeedbackResult from './pages/feedbackResult/FeedbackResult'
+import UserTable from './compontens/UserTable'
+import Test from './compontens/test'
+import Template from './pages/template'
 
 export default function Router() {
   return (
@@ -15,14 +18,16 @@ export default function Router() {
       <BrowserRouter>
         <GlobalModal>
           <Switch>
-            <Route path='/sign-up'>
-              <SignUp />
+            <Route path='/test'>
+              <UserTable />
+              {/* <Test /> */}
             </Route>
-            <Route path='/users' exact>
-              <Users />
+            <Route path='/users' >
+              {/* <Users /> */}
+              <Template />
             </Route>
-            <Route path='/news' exact>
-              <News />
+            <Route path='/news' >
+              <Template />
             </Route>
             <Route path="/" exact>
               <Home />

@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer, useContext } from 'react'
 import { Form, Input, Icon, Button, Spin, message } from 'antd';
 import useFetch from '../hooks/useFetch'
-import {GlobalModalContext} from '../store/GlobalModal'
-import {useHistory} from 'react-router-dom'
+import { GlobalModalContext } from '../store/GlobalModal'
+import { useHistory } from 'react-router-dom'
 
 //网络请求状态dispatch
 function reducer(state, action) {
@@ -18,17 +18,24 @@ function reducer(state, action) {
 }
 
 function SignUp(props) {
-  const {contentDispatch}=useContext(GlobalModalContext)
-  const history=useHistory()
+  const { contentDispatch } = useContext(GlobalModalContext)
+  const history = useHistory()
 
   const [request, requestDispatch] = useReducer(reducer, {})
   const { isLoading, response } = useFetch(request)
   //antd API
-  const { getFieldDecorator, getFieldValue, getFieldsValue, setFields, validateFields, resetFields } = props.form
+  const { getFieldDecorator, getFieldValue, getFieldsValue, setFields,setFieldsValue ,validateFields, resetFields } = props.form
+
+  //测试表格中传过来的值
+  
+  useEffect(()=>{
+    setFieldsValue({...props.values})
+  },[props.visible])
+
 
   //网络请求副作用及后续处理
   useEffect(() => {
-    if (!!response && response.method==='GET') {
+    if (!!response && response.method === 'GET') {
       if (response.result.n > 0) {
         message.error('账号重复，请重新输入')
         //手动设置username字段错误
@@ -44,15 +51,26 @@ function SignUp(props) {
         //验证全部通过后插入用户记录
         requestDispatch({ type: 'addUser', payload: { username, password: btoa(password), email } })
       }
-    } else if (!!response && request.method==='POST' && response.result.n === 1) {
+    } else if (!!response && request.method === 'POST' && response.result.n === 1) {
       message.success('注册成功')
       resetFields()
       //隐藏界面
-      contentDispatch({type:'hidden'})
-      
+      if (typeof props.setVisible === 'undefined') {
+        contentDispatch({ type: 'hidden' })
+      }else{
+        // props.setVisible(false)
+        // if(props.values){
+        //   console.log(props.values)
+        //  setFieldsValue({
+        //   username:props.values.username
+        //  }) 
+        // }
+        props.requestDispatch({type:'GET',payload:[{}]})
+      }
+
       //跳转登陆
       // contentDispatch({type:'signUpSuccess'})
-     history.push('/202') 
+      //  history.push('/202') 
 
     }
   }, [!!response])
@@ -63,7 +81,7 @@ function SignUp(props) {
     validateFields((err, values) => {
       if (!err) {
         //开始网络请求流程，发出查询请求，后续插入用户操作自动完成
-        requestDispatch({ type: 'getUser', payload: { username:values.username } })
+        requestDispatch({ type: 'getUser', payload: { username: values.username } })
       }
     })
   }
@@ -95,7 +113,8 @@ function SignUp(props) {
                 { required: true, message: '请输入用户名' },
                 { pattern: /^[a-zA-Z](?=.{3,12})\w*$/, message: '[a-zA-Z]开头,[a-zA-Z0-9_]长度4-13' },
               ],
-              validateTrigger: ['onChange']
+              validateTrigger: ['onChange'],
+              
             })(<Input prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder='用户名' />)}
           </Form.Item>
           <Form.Item>

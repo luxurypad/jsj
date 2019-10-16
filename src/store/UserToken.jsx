@@ -5,11 +5,8 @@ export const UserTokenContext = createContext()
 
 export default function UserToken(props) {
   const [userInfo, userInfoDispatch] = useReducer(reducer, { username: '', token: '' }, init)
-
-  //渲染后的副作用，更新网络请求全局变量头信息
-  useEffect(() => {
-    API_CONFIG.headers.Authorization=userInfo.Authorization
-  })
+  //渲染前更新headers，保证异步网络请求的头信息正确
+  API_CONFIG.headers.Authorization = userInfo.token
 
   return (
     <>

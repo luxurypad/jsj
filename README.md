@@ -1,6 +1,6 @@
 ## 1.修正全局弹窗组件位置
-* 全局弹窗组件应该被Router包含，否则弹窗组件内无法使用useHistory
-* 注意Switch的位置
+1. 全局弹窗组件应该被Router包含，否则弹窗组件内无法使用useHistory
+2. 注意Switch的位置
   ```html
   <GlobalModal>
     <Switch>
