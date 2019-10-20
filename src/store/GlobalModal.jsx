@@ -1,10 +1,10 @@
 import React, { useReducer, createContext } from 'react'
 import { Modal } from 'antd'
 
-import SignIn from '../compontens/SignIn'
-import SignUp from '../compontens/SignUp'
+import SignIn from '../components/SignIn'
+import SignUp from '../components/SignUp'
 // import SignUpSuccess from '../compontens/SignUpSuccess'
-import ChangePassword from '../compontens/ChangePassword'
+import ChangePassword from '../components/ChangePassword'
 
 export const GlobalModalContext = createContext()
 
